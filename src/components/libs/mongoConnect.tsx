@@ -2,11 +2,11 @@
 // import { MongoClient } from "mongodb";
 // import { MongoDBAdapter } from "@auth/mongodb-adapter";
 
-// if (!process.env.MONGO_URL) {
-//   throw new Error('Invalid/Missing environment variable: "MONGO_URL"');
+// if (!process.env.MONGO_URLs) {
+//   throw new Error('Invalid/Missing environment variable: "MONGO_URLs"');
 // }
 
-// const uri: string = process.env.MONGO_URL;
+// const uri: string = process.env.MONGO_URLs;
 // const options: object = {};
 
 // let client: MongoClient;
@@ -31,11 +31,11 @@
 // This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
 import { MongoClient, ServerApiVersion } from "mongodb";
 
-if (!process.env.MONGO_URL) {
-  throw new Error('Invalid/Missing environment variable: "MONGO_URL"');
+if (!process.env.MONGO_URLs) {
+  throw new Error('Invalid/Missing environment variable: "MONGO_URLs"');
 }
 
-const uri = process.env.MONGO_URL;
+const uri = process.env.MONGO_URLs;
 const options = {
   serverApi: {
     version: ServerApiVersion.v1,

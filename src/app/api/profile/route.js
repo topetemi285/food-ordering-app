@@ -1,12 +1,15 @@
 import { getServerSession } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcrypt";
+import GoogleProvider from "next-auth/providers/google";
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
+import client from "../../../components/libs/mongoConnect";
 import { User } from "../models/User";
 import { UserInfo } from "../models/UserInfo";
 import mongoose from "mongoose";
-import { authOptions } from "../auth/[...nextauth]/route";
-import { Console } from "console";
 
 export async function PUT(req) {
-  await mongoose.connect(process.env.MONGO_URL)
+  await mongoose.connect(process.env.MONGO_URLs);
   const data = await req.json();
   const { _id, name, image, ...otherUserInfo } = data;
 
@@ -17,8 +20,58 @@ export async function PUT(req) {
     await UserInfo.findOneAndUpdate({ _id }, otherUserInfo, { upsert: true });
   } else {
     //getCurrent user
-    const session = await getServerSession(authOptions);
-    //   console.log(authOptions);
+    const session = await getServerSession({
+      secret: process.env.SECRETs,
+      adapter: MongoDBAdapter(client),
+      providers: [
+        GoogleProvider({
+          clientId: process.env.GOOGLE_CLIENT_IDs,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRETs,
+        }),
+        CredentialsProvider({
+          name: "Credentials",
+          id: "credentials",
+          credentials: {
+            username: {
+              label: "Email",
+              type: "email",
+              placeholder: "jsmith@gmail.com",
+            },
+            password: { label: "Password", type: "password" },
+          },
+          async authorize(credentials, req) {
+            const { email, password } = credentials;
+
+            mongoose.connect(process.env.MONGO_URLs);
+
+            const user = await User.findOne({ email });
+
+            if (user) {
+              // Use await to properly handle the promise returned by bcrypt.compare
+              const passwordIsOkay = await bcrypt.compare(
+                credentials.password,
+                user.password
+              );
+
+              if (passwordIsOkay) {
+                return user;
+              } else {
+                throw new Error("Invalid email or password");
+              }
+              // const passwordIsOkay = user && bcrypt.compare(password, user.password);
+
+              console.log({ passwordIsOkay });
+
+              if (passwordIsOkay) {
+                return user;
+              }
+              return null;
+            }
+          },
+        }),
+      ],
+    });
+
     console.log({ session, data });
     const email = session.user?.email;
 
@@ -31,7 +84,7 @@ export async function PUT(req) {
 }
 
 export async function GET(req) {
-  await mongoose.connect(process.env.MONGO_URL)
+  await mongoose.connect(process.env.MONGO_URLs);
 
   const url = new URL(req.url);
   const _id = url.searchParams.get("_id");
@@ -41,7 +94,57 @@ export async function GET(req) {
     const userInfo = await UserInfo.findOne({ email: user.email }).lean();
     return Response.json({ ...user, ...userInfo });
   } else {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession({
+      secret: process.env.SECRETs,
+      adapter: MongoDBAdapter(client),
+      providers: [
+        GoogleProvider({
+          clientId: process.env.GOOGLE_CLIENT_IDs,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRETs,
+        }),
+        CredentialsProvider({
+          name: "Credentials",
+          id: "credentials",
+          credentials: {
+            username: {
+              label: "Email",
+              type: "email",
+              placeholder: "jsmith@gmail.com",
+            },
+            password: { label: "Password", type: "password" },
+          },
+          async authorize(credentials, req) {
+            const { email, password } = credentials;
+
+            mongoose.connect(process.env.MONGO_URLs);
+
+            const user = await User.findOne({ email });
+
+            if (user) {
+              // Use await to properly handle the promise returned by bcrypt.compare
+              const passwordIsOkay = await bcrypt.compare(
+                credentials.password,
+                user.password
+              );
+
+              if (passwordIsOkay) {
+                return user;
+              } else {
+                throw new Error("Invalid email or password");
+              }
+              // const passwordIsOkay = user && bcrypt.compare(password, user.password);
+
+              console.log({ passwordIsOkay });
+
+              if (passwordIsOkay) {
+                return user;
+              }
+              return null;
+            }
+          },
+        }),
+      ],
+    });
 
     const email = session?.user?.email;
     if (!email) {
@@ -52,50 +155,3 @@ export async function GET(req) {
     return Response.json({ ...user, ...userInfo });
   }
 }
-
-// export async function GET(req) {
-//   await mongoose.connect(process.env.MONGO_URL);
-
-//   const url = new URL(req.url);
-//   const _id = url.searchParams.get("_id");
-
-//   if (_id) {
-//     // Fetch the user by ID
-//     const user = await User.findOne({ _id }).lean();
-//     if (!user) {
-//       return new Response("User not found", { status: 404 });
-//     }
-
-//     // Fetch related user info using the email
-//     const userInfo = await UserInfo.findOne({ email: user.email }).lean();
-
-//     // Merge and send the result, handling cases where userInfo may not exist
-//     return Response.json({
-//       ...user,
-//       ...(userInfo || {})  // spread only if userInfo exists
-//     });
-//   } else {
-//     // Handle case for logged-in session
-//     const session = await getServerSession(authOptions);
-//     const email = session?.user?.email;
-
-//     if (!email) {
-//       return Response.json({});
-//     }
-
-//     // Fetch the user by email
-//     const user = await User.findOne({ email }).lean();
-//     if (!user) {
-//       return new Response("User not found", { status: 404 });
-//     }
-
-//     // Fetch related user info
-//     const userInfo = await UserInfo.findOne({ email }).lean();
-
-//     // Return the merged object
-//     return Response.json({
-//       ...user,
-//       ...(userInfo || {})  // spread only if userInfo exists
-//     });
-//   }
-// }

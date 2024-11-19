@@ -3,7 +3,7 @@ import { MenuItems } from "../models/MenuItem";
 
 export async function POST(req) {
   await mongoose
-    .connect(process.env.MONGO_URL)
+    .connect(process.env.MONGO_URLs)
     
   const data = await req.json();
   const menuItemDoc = await MenuItems.create(data);
@@ -12,7 +12,7 @@ export async function POST(req) {
 
 export async function PUT(req) {
   await mongoose
-    .connect(process.env.MONGO_URL)
+    .connect(process.env.MONGO_URLs)
    
   const { _id, ...data } = await req.json();
   await MenuItems.findByIdAndUpdate(_id, data);
@@ -21,14 +21,14 @@ export async function PUT(req) {
 
 export async function GET() {
   await mongoose
-    .connect(process.env.MONGO_URL)
+    .connect(process.env.MONGO_URLs)
    
   return Response.json(await MenuItems.find());
 }
 
 export async function DELETE(req) {
   await mongoose
-    .connect(process.env.MONGO_URL)
+    .connect(process.env.MONGO_URLs)
     
   const url = new URL(req.url);
   const _id = url.searchParams.get("_id");

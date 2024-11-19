@@ -1,4 +1,8 @@
-import { PutObjectAclCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  PutObjectAclCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
 import uniqid from "uniqid";
 
 export async function POST(req) {
@@ -12,8 +16,8 @@ export async function POST(req) {
     const s3Client = new S3Client({
       region: "eu-north-1",
       credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY,
-        secretAccessKey: process.env.AWS_SECRET_KEY,
+        accessKeyId: process.env.AWS_ACCESS_KEYs,
+        secretAccessKey: process.env.AWS_SECRET_KEYs,
       },
     });
     //graping the extension
