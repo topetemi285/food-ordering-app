@@ -54,7 +54,7 @@ function LoginPage() {
         <button
           className="flex items-center justify-center gap-4"
           // type="button"
-          onClick={() => signIn('google', { callbackUrl: "/" })}
+          onClick={() => signIn("google", { callbackUrl: "/" })}
         >
           <Image src="/google.webp" alt="google" width={30} height={30} />
           Login with google

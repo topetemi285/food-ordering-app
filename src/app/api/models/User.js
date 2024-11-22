@@ -44,4 +44,16 @@ UserSchema.post("validate", function (user) {
   }
 });
 
+// UserSchema.pre("save", async function (next) {
+//   if (this.isModified("password")) {
+//     if (typeof this.password !== "string") {
+//       throw new Error("Password must be a string");
+//     }
+
+//     const salt = await bcrypt.genSalt(10);
+//     this.password = await bcrypt.hash(this.password, salt);
+//   }
+// //   next();
+// });
+
 export const User = models?.User || model("User", UserSchema);

@@ -4,6 +4,7 @@ import Image from "next/image";
 import SectionHeader from "../../components/layout/SectionHeader";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
+import toast from "react-hot-toast";
 function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,17 +18,26 @@ function Register() {
     setError(false);
     setUserCreated(false);
 
-    const response = await fetch("/api/register", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-      headers: { "Content-Type": "application/json" },
+    const promise = new Promise(async (resolve, reject) => {
+      const response = await fetch("/api/register", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+        headers: { "Content-Type": "application/json" },
+      });
+      if (response.ok) {
+        resolve();
+        setUserCreated(true);
+      } else {
+        reject();
+        setError(true);
+      }
+      setCreatingUser(false);
     });
-    if (response.ok) {
-      setUserCreated(true);
-    } else {
-      setError(true);
-    }
-    setCreatingUser(false);
+    await toast.promise(promise, {
+      loading: "Registering in progress",
+      success: "User Registered",
+      error: "Error",
+    });
   };
 
   return (
