@@ -8,6 +8,7 @@ import client from "../../../../components/libs/mongoConnect";
 import { User } from "../../models/User";
 
 const handler = NextAuth({
+  debug: true,
   secret: process.env.SECRETs,
   adapter: MongoDBAdapter(client),
   providers: [
