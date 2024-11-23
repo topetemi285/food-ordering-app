@@ -7,7 +7,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import { Order } from "../models/Order";
 import { User } from "../models/User";
-import { client } from "../../../components/libs/mongoConnect";
+import client from "../../../components/libs/mongoConnect";
 
 export async function GET(req) {
   mongoose.connect(process.env.MONGO_URL);
