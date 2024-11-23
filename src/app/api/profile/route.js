@@ -21,12 +21,14 @@ export async function PUT(req) {
   } else {
     //getCurrent user
     const session = await getServerSession({
+      debug: true,
       secret: process.env.SECRET,
       adapter: MongoDBAdapter(client),
       providers: [
         GoogleProvider({
           clientId: process.env.GOOGLE_CLIENT_ID,
           clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+          allowDangerousEmailAccountLinking: true,
         }),
         CredentialsProvider({
           name: "Credentials",
@@ -41,35 +43,36 @@ export async function PUT(req) {
           },
           async authorize(credentials, req) {
             const { email, password } = credentials;
+            // const email = credentials?.email;
+            // const password = credentials?.password;
 
             mongoose.connect(process.env.MONGO_URL);
 
             const user = await User.findOne({ email });
 
-            if (user) {
-              // Use await to properly handle the promise returned by bcrypt.compare
-              const passwordIsOkay = await bcrypt.compare(
-                credentials.password,
-                user.password
-              );
+            const passwordOk =
+              user &&
+              bcrypt.compareSync(credentials.password, user.password, user);
 
-              if (passwordIsOkay) {
-                return user;
-              } else {
-                throw new Error("Invalid email or password");
-              }
-              // const passwordIsOkay = user && bcrypt.compare(password, user.password);
+            // console.log(
+            //   "[CHECK IS THE PASSWORD OK]",
+            //   { passwordOk },
+            //   password,
+            //   user.password,
+            //   user
+            // );
 
-              console.log({ passwordIsOkay });
-
-              if (passwordIsOkay) {
-                return user;
-              }
-              return null;
+            if (passwordOk) {
+              return user;
             }
+
+            return null;
           },
         }),
       ],
+      session: {
+        strategy: "jwt",
+      },
     });
 
     console.log({ session, data });
@@ -95,12 +98,14 @@ export async function GET(req) {
     return Response.json({ ...user, ...userInfo });
   } else {
     const session = await getServerSession({
+      debug: true,
       secret: process.env.SECRET,
       adapter: MongoDBAdapter(client),
       providers: [
         GoogleProvider({
           clientId: process.env.GOOGLE_CLIENT_ID,
           clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+          allowDangerousEmailAccountLinking: true,
         }),
         CredentialsProvider({
           name: "Credentials",
@@ -115,35 +120,36 @@ export async function GET(req) {
           },
           async authorize(credentials, req) {
             const { email, password } = credentials;
+            // const email = credentials?.email;
+            // const password = credentials?.password;
 
             mongoose.connect(process.env.MONGO_URL);
 
             const user = await User.findOne({ email });
 
-            if (user) {
-              // Use await to properly handle the promise returned by bcrypt.compare
-              const passwordIsOkay = await bcrypt.compare(
-                credentials.password,
-                user.password
-              );
+            const passwordOk =
+              user &&
+              bcrypt.compareSync(credentials.password, user.password, user);
 
-              if (passwordIsOkay) {
-                return user;
-              } else {
-                throw new Error("Invalid email or password");
-              }
-              // const passwordIsOkay = user && bcrypt.compare(password, user.password);
+            // console.log(
+            //   "[CHECK IS THE PASSWORD OK]",
+            //   { passwordOk },
+            //   password,
+            //   user.password,
+            //   user
+            // );
 
-              console.log({ passwordIsOkay });
-
-              if (passwordIsOkay) {
-                return user;
-              }
-              return null;
+            if (passwordOk) {
+              return user;
             }
+
+            return null;
           },
         }),
       ],
+      session: {
+        strategy: "jwt",
+      },
     });
 
     const email = session?.user?.email;
