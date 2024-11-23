@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import NextAuth, { getServerSession } from "next-auth";
+import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import GoogleProvider from "next-auth/providers/google";
@@ -9,12 +9,12 @@ import { User } from "../../models/User";
 
 const handler = NextAuth({
   debug: true,
-  secret: process.env.SECRETs,
+  secret: process.env.SECRET,
   adapter: MongoDBAdapter(client),
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_IDs,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRETs,
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       allowDangerousEmailAccountLinking: true,
     }),
     CredentialsProvider({
@@ -33,7 +33,7 @@ const handler = NextAuth({
         // const email = credentials?.email;
         // const password = credentials?.password;
 
-        mongoose.connect(process.env.MONGO_URLs);
+        mongoose.connect(process.env.MONGO_URL);
 
         const user = await User.findOne({ email });
 
@@ -56,5 +56,8 @@ const handler = NextAuth({
       },
     }),
   ],
+  session: {
+    strategy: "jwt",
+  },
 });
 export { handler as GET, handler as POST };

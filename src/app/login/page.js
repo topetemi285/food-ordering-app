@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import SectionHeader from "../../components/layout/SectionHeader";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
+import toast from "react-hot-toast";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -13,10 +14,19 @@ function LoginPage() {
     ev.preventDefault(ev);
     setLoginInProgress(true);
 
-    await signIn("credentials", {
-      email,
-      password,
-      callbackUrl: "/",
+    const loginPromise = new Promise(async (resolve, reject) => {
+      const res = await signIn("credentials", {
+        email,
+        password,
+        callbackUrl: "/",
+      });
+      if (res?.error) reject();
+      if (res.ok) resolve();
+    });
+    await toast.promise(loginInProgress, {
+      loading: "Login in Progress",
+      success: "Login Successful",
+      error: "Unable to LOgin",
     });
     setLoginInProgress(false);
   }

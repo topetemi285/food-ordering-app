@@ -9,7 +9,7 @@ import { UserInfo } from "../models/UserInfo";
 import mongoose from "mongoose";
 
 export async function PUT(req) {
-  await mongoose.connect(process.env.MONGO_URLs);
+  await mongoose.connect(process.env.MONGO_URL);
   const data = await req.json();
   const { _id, name, image, ...otherUserInfo } = data;
 
@@ -21,12 +21,12 @@ export async function PUT(req) {
   } else {
     //getCurrent user
     const session = await getServerSession({
-      secret: process.env.SECRETs,
+      secret: process.env.SECRET,
       adapter: MongoDBAdapter(client),
       providers: [
         GoogleProvider({
-          clientId: process.env.GOOGLE_CLIENT_IDs,
-          clientSecret: process.env.GOOGLE_CLIENT_SECRETs,
+          clientId: process.env.GOOGLE_CLIENT_ID,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         }),
         CredentialsProvider({
           name: "Credentials",
@@ -42,7 +42,7 @@ export async function PUT(req) {
           async authorize(credentials, req) {
             const { email, password } = credentials;
 
-            mongoose.connect(process.env.MONGO_URLs);
+            mongoose.connect(process.env.MONGO_URL);
 
             const user = await User.findOne({ email });
 
@@ -84,7 +84,7 @@ export async function PUT(req) {
 }
 
 export async function GET(req) {
-  await mongoose.connect(process.env.MONGO_URLs);
+  await mongoose.connect(process.env.MONGO_URL);
 
   const url = new URL(req.url);
   const _id = url.searchParams.get("_id");
@@ -95,12 +95,12 @@ export async function GET(req) {
     return Response.json({ ...user, ...userInfo });
   } else {
     const session = await getServerSession({
-      secret: process.env.SECRETs,
+      secret: process.env.SECRET,
       adapter: MongoDBAdapter(client),
       providers: [
         GoogleProvider({
-          clientId: process.env.GOOGLE_CLIENT_IDs,
-          clientSecret: process.env.GOOGLE_CLIENT_SECRETs,
+          clientId: process.env.GOOGLE_CLIENT_ID,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         }),
         CredentialsProvider({
           name: "Credentials",
@@ -116,7 +116,7 @@ export async function GET(req) {
           async authorize(credentials, req) {
             const { email, password } = credentials;
 
-            mongoose.connect(process.env.MONGO_URLs);
+            mongoose.connect(process.env.MONGO_URL);
 
             const user = await User.findOne({ email });
 

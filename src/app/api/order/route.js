@@ -10,15 +10,15 @@ import { User } from "../models/User";
 import { client } from "../../../components/libs/mongoConnect";
 
 export async function GET(req) {
-  mongoose.connect(process.env.MONGO_URLs);
+  mongoose.connect(process.env.MONGO_URL);
 
   const session = await getServerSession({
-    secret: process.env.SECRETs,
+    secret: process.env.SECRET,
     adapter: MongoDBAdapter(client),
     providers: [
       GoogleProvider({
-        clientId: process.env.GOOGLE_CLIENT_IDs,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRETs,
+        clientId: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       }),
       CredentialsProvider({
         name: "Credentials",
@@ -34,7 +34,7 @@ export async function GET(req) {
         async authorize(credentials, req) {
           const { email, password } = credentials;
 
-          mongoose.connect(process.env.MONGO_URLs);
+          mongoose.connect(process.env.MONGO_URL);
 
           const user = await User.findOne({ email });
 
