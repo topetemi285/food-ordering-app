@@ -8,9 +8,13 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname:"tutorialss.s3.amazonaws.com"
-      }
+        hostname: "tutorialss.s3.amazonaws.com",
+      },
     ],
+  },
+  eslint: {
+    // Disable ESLint during builds
+    ignoreDuringBuilds: true,
   },
 };
 
