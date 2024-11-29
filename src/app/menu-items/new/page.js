@@ -44,7 +44,7 @@ function NewMenuItem() {
   }
   return (
     <section className="mt-8">
-      <UserTabs isAdmin={true} />
+      {/* <UserTabs isAdmin={true} /> */}
       <div className="mt-8 max-w-lg mx-auto">
         <Link href={"/menu-items"} className="button flex">
           <span>Show All Menu Items</span>

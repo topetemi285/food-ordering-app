@@ -6,6 +6,7 @@ import UserProfile from "../../hooks/UserProfile";
 import toast from "react-hot-toast";
 import { resolve } from "path";
 import DeleteButton from "../../components/DeleteButton";
+import { FaEdit } from "react-icons/fa";
 
 function CategoriesPage() {
   const [newCategoryName, setNewCategoryName] = useState("");
@@ -79,7 +80,7 @@ function CategoriesPage() {
   }
   return (
     <section className="mt-8 max-w-lg mx-auto">
-      <UserTabs isAdmin={true} />
+      {/* <UserTabs isAdmin={true} /> */}
       <form className="mt-8" onSubmit={handleNewCategorySubmit}>
         <div className="flex gap-2 items-end">
           <div className="grow">
@@ -128,9 +129,11 @@ function CategoriesPage() {
                     setNewCategoryName(category.name);
                   }}
                 >
-                  Edit
+                  <FaEdit />
                 </button>
-                <DeleteButton label="Delete" onDelete={handleDelete} />
+                <DeleteButton 
+                // label="Delete" 
+                onDelete={handleDelete} />
               </div>
             </div>
           ))}

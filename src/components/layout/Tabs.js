@@ -1,15 +1,16 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 function UserTabs({ isAdmin }) {
+  const [isOpened, setIsOpened] = useState(false);
   const path = usePathname();
   return (
-    <div className="flex mx-auto gap-3 tabs justify-center">
-      <Link className={path === "/profile" ? "active" : ""} href={"/profile"}>
+    <div className="flex flex-col gap-3 tabs justify-end items-end">
+      {/* <Link className={path === "/profile" ? "active" : ""} href={"/profile"}>
         Profile
-      </Link>
+      </Link> */}
       {isAdmin && (
         <>
           <Link

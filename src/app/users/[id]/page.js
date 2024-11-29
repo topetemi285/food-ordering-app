@@ -47,7 +47,7 @@ function EditUserProfile() {
   }
   return (
     <section className="mt-8 mx-auto max-w-lg">
-      <UserTabs isAdmin={true} />
+      {/* <UserTabs isAdmin={true} /> */}
       <div className="mt-8">
         <UserForm user={user} onSave={handleSaveButtonClick} />
       </div>

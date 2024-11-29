@@ -23,7 +23,7 @@ function UsersPage() {
   }
   return (
     <section className="mt-8 max-w-lg mx-auto">
-      <UserTabs isAdmin={true} />
+      {/* <UserTabs isAdmin={true} /> */}
       <div className="mt-8">
         {users?.length > 0 &&
           users.map((user) => (

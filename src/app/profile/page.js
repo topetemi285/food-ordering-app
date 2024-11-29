@@ -65,7 +65,7 @@ function ProfilePage() {
 
   return (
     <section className="mt-6">
-      <UserTabs isAdmin={isAdmin} />
+      {/* <UserTabs isAdmin={isAdmin} /> */}
       <div className="max-w-lg mx-auto">
         <div className="text-center mt-8">
           <SectionHeader title={"PROFILE"} />

@@ -24,7 +24,7 @@ function MenuPage() {
         categories.map((cat) => (
           <div key={cat._id}>
             <div>
-              <div className="text-center">
+              <div>
                 <SectionHeader title={cat.name} />
               </div>
               <div className="grid sm:grid-cols-3 mt-6 mb-12 gap-4">
@@ -33,7 +33,7 @@ function MenuPage() {
                     .filter((menu) => menu.categoryValue === cat._id)
                     .map((item) => (
                       <div key={item._id}>
-                        <MenuItem  {...item} />
+                        <MenuItem {...item} />
                       </div>
                     ))}
               </div>

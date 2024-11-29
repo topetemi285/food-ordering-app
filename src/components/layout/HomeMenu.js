@@ -20,7 +20,7 @@ function HomeMenu() {
       <div>
         <SectionHeader title={"CHECKOUT SOME OF OUR PRODUCT"} />
       </div>
-      <div className="mt-5 grid grid-cols-3 gap-4">
+      <div className="grid lg:grid-cols-4 md:grid-cols-3 gap-4">
         {bestSellers?.length > 0 &&
           bestSellers.map((item) => <MenuItem key={item.id} {...item} />)}
       </div>

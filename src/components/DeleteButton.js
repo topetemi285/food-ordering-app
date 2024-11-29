@@ -1,7 +1,10 @@
 "use client";
 import React, { useState } from "react";
+import { MdDelete } from "react-icons/md"
 
-function DeleteButton({ label, onDelete }) {
+function DeleteButton({ 
+  // label, 
+  onDelete }) {
   const [showConfirm, setShowConfirm] = useState(false);
 
   if (showConfirm) {
@@ -33,7 +36,7 @@ function DeleteButton({ label, onDelete }) {
 
   return (
     <button type="button" onClick={() => setShowConfirm(true)}>
-      {label}
+      <MdDelete />
     </button>
   );
 }

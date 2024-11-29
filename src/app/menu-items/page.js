@@ -27,8 +27,8 @@ function MenuItem() {
   }
 
   return (
-    <section className="mt-8 max-w-lg mx-auto">
-      <UserTabs isAdmin={true} />
+    <section className="mt-8 mx-auto max-w-4xl">
+      {/* <UserTabs isAdmin={true} /> */}
       <div className="mt-8 mb-10">
         <Link className="button flex " href={"/menu-items/new"}>
           Create new Menu Item
@@ -36,27 +36,27 @@ function MenuItem() {
       </div>
       <div>
         <h2 className="text-sm text-gray-500 mt-4">Edit Menu Item:</h2>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {menuItem?.length > 0 &&
             menuItem.map((item) => (
-              <Link
-                href={"/menu-items/edit/" + item._id}
-                className="bg-gray-200 rounded-lg p-4"
+              <div
                 key={item._id}
+                className="bg-gray-200 max-w-52 rounded-lg p-4"
               >
-                <div className="relative">
-                  <Image
-                    className="rounded-md"
-                    src={item.image}
-                    alt={item.name}
-                    width={200}
-                    height={200}
-                  />
-                </div>
-                <div className="mt-5 text-center font-semibold">
-                  {item.name}
-                </div>
-              </Link>
+                <Link href={"/menu-items/edit/" + item._id}>
+                  <div className="relative">
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      width={200}
+                      height={200}
+                    />
+                  </div>
+                  <div className="mt-5 text-center font-semibold">
+                    {item.name}
+                  </div>
+                </Link>
+              </div>
             ))}
         </div>
       </div>
